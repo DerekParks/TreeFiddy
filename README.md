@@ -1,3 +1,5 @@
+<p align="center"><img src="branding/treefiddy_mascot.png" width="240" alt="TreeFiddy mascot"></p>
+
 # TreeFiddy 🌳💵
 
 On-device political-spam filter for Android — *ain't givin' 'em no tree fiddy.*
