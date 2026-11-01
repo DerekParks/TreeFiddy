@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Read the FULL message body from the SMS provider — notification previews
+         truncate long political texts (the "ask" is often at the end). -->
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <!-- Post the "SMS access revoked" heads-up when Android neuters READ_SMS.
+         UI-only permission; does not affect the no-network guarantee. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Provably no data collection: the app must never hold INTERNET, even if
+         a library manifest requests it. -->
+    <uses-permission android:name="android.permission.INTERNET" tools:node="remove" />
+    <!-- Strip library-merged cruft (LiteRT/asset-delivery/WorkManager declare
+         these; we run a local interpreter only). -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" tools:node="remove" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" tools:node="remove" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" tools:node="remove" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" tools:node="remove" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" tools:node="remove" />
+
+    <application
+        android:allowBackup="false"
+        android:label="TreeFiddy"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:theme="@android:style/Theme.Material">
+
+        <!-- Minimal test UI: type/paste a message, see p(spam). No permissions needed. -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="stateAlwaysHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Companion path: reads incoming SMS from the messaging app's notification.
+             Enable under Settings > Notifications > Device & app notifications >
+             Special app access > Notification access. -->
+        <service
+            android:name=".SpamSmsListener"
+            android:exported="false"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
+    </application>
+</manifest>
